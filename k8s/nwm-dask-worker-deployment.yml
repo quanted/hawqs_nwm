@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nwm-dask-worker
+  name: nwm-dask-worker
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nwm-dask-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nwm-dask-worker
+    spec:
+      containers:
+      - args:
+        - conda
+        - run
+        - -n
+        - pyenv
+        - --no-capture-output
+        - dask-worker
+        - nwm-dask-scheduler:8786
+#        image: ghcr.io/quanted/hawqs_nwm:main
+        image: hawqs_nwm_test
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: nwm-config
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        name: nwm-dask-worker
+        volumeMounts:
+        - mountPath: /src/data
+          name: nwm-data-volume
+      hostname: hms-dask-worker
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+#      - name: nwm-data-volume
+#        persistentVolumeClaim:
+#          claimName: nwm-data-volume-claim
+      - name: nwm-data-volume
+        hostPath:
+          path: /D//data/nwm_data

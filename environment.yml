@@ -1,0 +1,14 @@
+name: hawqs_nwm
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - dask
+  - s3fs
+  - xarray
+  - zarr
+  - jupyterlab
+  - tqdm
+  - pytables
+  - boto3

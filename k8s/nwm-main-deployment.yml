@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nwm-main
+  name: nwm-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nwm-main
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nwm-main
+    spec:
+      containers:
+      - args:
+          - tail
+          - -f
+          - /dev/null
+        envFrom:
+          - configMapRef:
+              name: nwm-config
+#        image: ghcr.io/quanted/hawqs_nwm:main
+        image: hawqs_nwm_test
+        imagePullPolicy: Never
+        name: nwm-main
+        volumeMounts:
+        - mountPath: /src/data
+          name: nwm-data-volume
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+#      - name: nwm-data-volume
+#        persistentVolumeClaim:
+#          claimName: nwm-data-volume-claim
+      - name: nwm-data-volume
+        hostPath:
+          path: /D//data/nwm_data

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 2
+  labels:
+    app: nwm-dask-scheduler
+  name: nwm-dask-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nwm-dask-scheduler
+  template:
+    metadata:
+      labels:
+        app: nwm-dask-scheduler
+    spec:
+      containers:
+      - args:
+        - conda
+        - run
+        - -n
+        - pyenv
+        - --no-capture-output
+        - dask-scheduler
+#        image: ghcr.io/quanted/hawqs_nwm:main
+        image: hawqs_nwm_test
+        imagePullPolicy: Never
+        name: nwm-dask-scheduler
+        ports:
+        - containerPort: 8786
+          protocol: TCP
+        - containerPort: 8787
+          protocol: TCP
+      hostname: nwm-dask-scheduler
+      restartPolicy: Always

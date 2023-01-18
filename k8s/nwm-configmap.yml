@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nwm-config
+  labels:
+    app: nwm-config
+data:
+  DASK_SCHEDULER: "nwm-dask-scheduler:8786"
+  HUC8_FILE: "comid_huc8_boundary_conditions.csv"
+  DB_SERVER_NAME: "status-database.sqlite3"
